@@ -163,7 +163,41 @@ def visualize_cost(iterations, cost_history):
     plt.savefig('cost_plot.png')
     # plt.show()
 
-#  INPUT HELPERS
+
+def r2_score(y_true, y_pred):
+    """
+    Compute the R² score (coefficient of determination).
+    This tells how much of the variation in Y your model explains.
+
+    R² = 1 - (sum of squared errors / total variance)
+    Interpretation:
+    - R² = 1   → perfect predictions
+    - R² = 0   → model does no better than predicting the mean
+    - R² < 0   → model is worse than just predicting the mean
+    """
+
+    # ---- Step 1: Compute the average real price (the baseline model) ----
+    total = 0
+    for value in y_true:
+        total += value
+    mean_y = total / len(y_true)
+
+    # ---- Step 2: Compute the "error" between true and predicted values ----
+    # SS_res = Σ (y_true - y_pred)²
+    ss_res = 0
+    for real, predicted in zip(y_true, y_pred):
+        ss_res += (real - predicted) ** 2
+
+    # ---- Step 3: Compute total variance in the real data ----
+    # SS_tot = Σ (y_true - mean_y)²
+    ss_tot = 0
+    for real in y_true:
+        ss_tot += (real - mean_y) ** 2
+    r2_value = 1 - (ss_res / ss_tot)
+
+    return r2_value
+
+    
 def get_input_choice():
     try:
         value = int(input("Proceed: "))
@@ -171,6 +205,7 @@ def get_input_choice():
     except ValueError:
         print("Invalid number")
         return None
+    
 
 def main():
     theta0 = 0
@@ -188,7 +223,7 @@ def main():
         choice = get_input_choice()
         os.system("clear")
 
-        # Training always happens
+        # training always happens
         theta0_n, theta1_n, iters, cost_hist = train_model(theta1, theta0, x_norm, y_norm)
         theta0_d, theta1_d = denormalize(theta0_n, theta1_n, x_raw, y_raw)
 
@@ -201,7 +236,7 @@ def main():
         elif choice == 4:
             return
         else:
-            print("Enter a valid number between 1–4")
+            print("Enter a valid number between 1-4")
         save_thetas(theta0_d, theta1_d)
     except KeyboardInterrupt:
         print("\nExiting...")
