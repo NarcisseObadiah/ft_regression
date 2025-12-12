@@ -141,6 +141,12 @@ Plots are saved as:
 - `plot.png` → regression line and scatter plot  
 - `cost_plot.png` → cost function over iterations  
 
+- **Data vs. Regression Line**:
+![Data Plot visualization:](/plot.png)
+
+- **Cost over Iterations**: 
+![Cost Plot visualization:](/cost_plot.png)
+
 ---
 
 ## 9. Project Structure
