@@ -1,47 +1,33 @@
 import json
-import sys
 
-# Load saved thetas
-def load_thetas(filename="values.json"):
-    """
-    Load Theta0 and Theta1 from JSON file produced by training.
-    These values are already denormalized, so they accept raw mileage.
-    """
+def load_thetas(filename="thetas.json"):
     try:
-        with open(filename, "r") as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        print("Error: 'values.json' not found. Run training first.")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print("Error: 'values.json' contains invalid JSON.")
-        sys.exit(1)
+        with open(filename, "r") as file:
+            data = json.load(file)
+        if "theta0" not in data or "theta1" not in data:
+            raise ValueError("Invalid thetas.json format")
 
-    # Validate keys
-    try:
-        theta0 = float(data["Theta0"])
-        theta1 = float(data["Theta1"])
-    except KeyError:
-        print("Error: Missing keys 'Theta0' or 'Theta1' in values.json.")
-        sys.exit(1)
-    except (TypeError, ValueError):
-        print("Error: Invalid numeric data in values.json.")
-        sys.exit(1)
+        theta0 = float(data["theta0"])
+        theta1 = float(data["theta1"])
+
+    except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
+        print(f"Warning: {e}. Please launch training before any prediction!!!")
+        theta0, theta1 = 0.0, 0.0
 
     return theta0, theta1
 
 
-# prediction logic-- > f(x) = Wxi + B
+# prediction logic-- > f(x) = b + wxi --> price =  theta0 + theta1 * mileage
 def estimate_price(mileage, theta0, theta1):
-    """price = theta0 + theta1 * mileage"""
     return theta0 + theta1 * mileage
+
 
 if __name__ == "__main__":
     theta0, theta1 = load_thetas()
     try:
         mileage = float(input("Enter car mileage (km): "))
     except ValueError:
-        print("Invalid mileage input.")
-        sys.exit(1)
+        print("Invalid mileage input, please enter a valid input... :)")
+        exit(1)
     price = estimate_price(mileage, theta0, theta1)
     print(f"This car price is estimated around : {price:.2f} €")

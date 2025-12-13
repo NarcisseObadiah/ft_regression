@@ -31,18 +31,17 @@ def print_info():
     print("\n=== Training Options ===\n")
     print("1. Train the model with raw data")
     print("2. Visualize the regression results")
-    print("3. Visualize the cost function over iterations")
+    print("3. Visualize the cost function over multiple iterations")
     print("4. Quit\n")
 
 #  JSON HANDLING FOR SAVING THETAS
 def save_thetas(theta0, theta1):
-    """Save θ0 and θ1 to values.json."""
+    """Save θ0 and θ1 to thetas.json."""
     try:
-        with open("values.json", "w") as json_file:
+        with open("thetas.json", "w") as json_file:
             json.dump({"Theta0": theta0, "Theta1": theta1}, json_file)
     except Exception as e:
         print(f"Error: {e}")
-
 
 #  DATA NORMALIZATION
 
@@ -73,7 +72,7 @@ def error(theta1, theta0, x, y):
     """Compute prediction error: (θ0 + θ1 * x) - y."""
     return (theta0 + theta1 * x) - y
 
-#  GRADIENT UPDATE RULES (STEP-BY-STEP)
+#  GRADIENT UPDATE RULES
 
 def gradient_theta1(theta1, theta0, x_data, y_data):
     """
@@ -105,8 +104,7 @@ def gradient_theta0(theta1, theta0, x_data, y_data):
 
 def apply_gradient_descent(theta1, theta0, x_data, y_data, learning_rate=0.1):
     """
-    Apply one iteration of gradient descent:
-    
+    apply one iteration of gradient descent:
         θ0 := θ0 - lr * dJ/dθ0
         θ1 := θ1 - lr * dJ/dθ1
         whith  lr as learning rate
@@ -133,7 +131,7 @@ def cost(theta1, theta0, x_data, y_data):
     return (1 / (2 * m)) * squared_error(theta1, theta0, x_data, y_data)
 
 def train_model(theta1, theta0, x_data, y_data, iterations=1000):
-    """Run full gradient descent training."""
+    """Run full gradient descent training"""
     cost_history = []
 
     for _ in range(iterations):
@@ -146,8 +144,6 @@ def train_model(theta1, theta0, x_data, y_data, iterations=1000):
 
 def visualize_regression(theta0, theta1, x_data, y_data):
     """Scatter + regression line."""
-    # x = np.array(x_data)
-    # y = np.array(y_data)
     y_pred = predic.estimate_price(x_data, theta0, theta1)
 
     plt.scatter(x_data, y_data)
@@ -211,8 +207,6 @@ def model_precision(theta0, theta1, x_raw, y_raw):
     for mileage in x_raw:
         price = theta0 + theta1 * mileage
         predictions.append(price)
-
-    # Compute and return R² score
     precision_value = r2_score(y_raw, predictions)
     return precision_value
 
