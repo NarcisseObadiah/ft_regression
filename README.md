@@ -63,32 +63,32 @@ python train.py
 You will see a menu:
 
 ```
-=== Training Options ===
-1. Train the model with raw data
-2. Visualize the regression results
-3. Visualize the cost function over iterations
-4. Quit
+Select an option:
+ 1) Train on data
+ 2) Show regression plot
+ 3) Show cost plot
+ 4) Quit
 ```
 
-- **Option 1** → trains the model and prints results including **denormalized parameters**, **final cost**, and **R² precision**.  
-- **Option 2** → plots the data and regression line.  
-- **Option 3** → plots cost vs. iterations.  
+- **Option 1** → trains the model and prints results including **theta0/theta1** (normalized and denormalized), **final cost**, and **R² score**.  
+- **Option 2** → plots the data and regression line, saves to `plot.png`.  
+- **Option 3** → plots cost vs. iterations, saves to `cost_plot.png`.  
 
 ---
 
 ## 5. Model Parameters
 
-The model saves parameters into `values.json`:
+The model saves parameters into `thetas.json`:
 
 ```json
 {
-  "Theta0": 8481.17,
-  "Theta1": -0.02127
+  "theta0": 8481.17,
+  "theta1": -0.02127
 }
 ```
 
-- **Theta0** → intercept (estimated price for 0 km)  
-- **Theta1** → slope (price decrease per km)
+- **theta0** → intercept (estimated price for 0 km)  
+- **theta1** → slope (price decrease per km)
 
 ---
 
@@ -154,13 +154,29 @@ Plots are saved as:
 ```
 ft_linear_regression/
 ├── data.csv              # Dataset (mileage, price)
-├── train.py              # Main training script
+├── train.py              # Main training script with load_data() helper
 ├── predic.py             # Predict price for a given mileage
-├── values.json           # Saved model parameters (after training)
+├── utils.py              # Core functions (gradient descent, normalization, visualization)
+├── thetas.json           # Saved model parameters (theta0, theta1)
 ├── plot.png              # Regression plot (generated)
 ├── cost_plot.png         # Cost plot (generated)
+├── requirement.txt       # Python dependencies
 └── README.md             # Project documentation
 ```
+
+### File Descriptions
+
+- **train.py**: Main training workflow with `load_data()` function for data loading/validation and `main()` for training loop
+- **utils.py**: Contains helper functions:
+  - `display_result()` - Print training summary
+  - `show_menu()` - Display menu options
+  - `save_thetas()` / `load_thetas()` - Save/load model parameters
+  - `normalize()` / `denormalize()` - Data scaling functions
+  - `train_model()` - Gradient descent training loop
+  - `display_regression_plot()` / `display_cost_plot()` - Visualization functions
+  - `model_precision()` - Calculate R² score
+  - `get_input_choice()` - Handle user input
+- **predic.py**: Standalone prediction script using saved parameters from `thetas.json`
 
 ---
 
@@ -177,18 +193,13 @@ ft_linear_regression/
 ## 11. Example Output
 
 ```
-==================== TRAINING SUMMARY ====================
-
-Normalized Theta0 : 0.9362
-Normalized Theta1 : -0.9954
-
-Real Theta0       : 8481.17 €
-Real Theta1       : -0.02127 €/km
-
-Final Training Cost (MSE) : 0.01035
-Model Precision (R² score) : 0.7329
-
-==========================================================
+Training summary:
+- theta0 (normalized): 0.936200
+- theta1 (normalized): -0.995400
+- theta0:              8481.170000
+- theta1:              -0.021270
+- final cost:          0.010350
+- R2 score:            0.732900
 ```
 
 ---

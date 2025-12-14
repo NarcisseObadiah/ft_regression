@@ -17,17 +17,17 @@ def load_thetas(filename="thetas.json"):
     return theta0, theta1
 
 
-# prediction logic-- > f(x) = b + wxi --> price =  theta0 + theta1 * mileage
-def estimate_price(mileage, theta0, theta1):
-    return theta0 + theta1 * mileage
+# prediction logic: f(x) = theta0 + theta1 * mileage
+def estimate_price(mileage_km, theta0, theta1):
+    return theta0 + theta1 * mileage_km
 
 
 if __name__ == "__main__":
     theta0, theta1 = load_thetas()
     try:
-        mileage = float(input("Enter car mileage (km): "))
+        mileage_km = float(input("Enter car mileage (km): "))
     except ValueError:
         print("Invalid mileage input, please enter a valid input... :)")
         exit(1)
-    price = estimate_price(mileage, theta0, theta1)
-    print(f"This car price is estimated around : {price:.2f} €")
+    estimated_price = estimate_price(mileage_km, theta0, theta1)
+    print(f"This car price is estimated around : {estimated_price:.2f} €")
