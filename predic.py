@@ -12,7 +12,7 @@ def load_thetas(filename="thetas.json"):
 
     except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
         print(f"Warning: {e}. Please launch training before any prediction!!!")
-        theta0, theta1 = 0.0, 0.0
+        theta0, theta1 = 0, 0
 
     return theta0, theta1
 
